@@ -23,6 +23,11 @@ const char *ultrassonicTopic = "ESP32_SENSOR/ultrassonicSensor";
 
 const char *ledTopic = "ESP32_SENSOR/ledControl";
 
+
+byte lightSensor = 34;
+
+
+
 /*------------------------------FUNCTIONS------------------------------*/
 
 void connectToWifi(){
@@ -68,6 +73,8 @@ void setup()
 
   connectToWifi();
   connectToBroker();
+
+  pinMode(lightSensor,INPUT);
 }
 
 void loop()
@@ -79,4 +86,6 @@ void loop()
     connectToBroker();
   }
   mqttClient.loop();
+  Serial.print("Luz: ");
+  Serial.println(map(analogRead(lightSensor),0,4095,0,100));
 }
