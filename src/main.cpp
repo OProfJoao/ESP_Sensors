@@ -33,21 +33,25 @@ byte lightSensor = 34;
 void connectToWifi(){
   WiFi.begin(WIFI_SSID,WIFI_PASS);
   Serial.println("Connecting to WiFi");
-  while(WiFi.isConnected() == false){
+  byte tentativas;
+  while(WiFi.isConnected() == false && tentativas < 10){
     Serial.print("Status: "); 
     Serial.println(WiFi.status());
     delay(1000);
+    tentativas ++;
   }
   Serial.println("Connected to WiFi");
 }
 
 void connectToBroker(){
-  while(mqttClient.connected() == false){
+  byte tentativas;
+  while(mqttClient.connected() == false && tentativas < 10){
     mqttClient.setServer(BROKER,8883);
     mqttClient.connect("ESP32_SENSOR",MQTT_USERNAME,MQTT_PASS);
     if(mqttClient.connected() == false){
       Serial.println("Failed to connect to broker");
       delay(1000);
+      tentativas ++;
     }else{
       Serial.println("Connected to broker");
       mqttClient.setCallback(messageReceived);
@@ -79,13 +83,13 @@ void setup()
 
 void loop()
 {
-  if(WiFi.isConnected() == false){
-    connectToWifi();
-  }
-  if(mqttClient.connected() == false){
-    connectToBroker();
-  }
-  mqttClient.loop();
+  // if(WiFi.isConnected() == false){
+  //   connectToWifi();
+  // }
+  // if(mqttClient.connected() == false){
+  //   connectToBroker();
+  // }
+  // mqttClient.loop();
   Serial.print("Luz: ");
   Serial.println(map(analogRead(lightSensor),0,4095,0,100));
 }
