@@ -1,3 +1,4 @@
+/*------------------------------IMPORTED LIBRARIES------------------------------*/
 #include <Arduino.h>
 #include <esp32DHT.h>
 #include <pubSubClient.h>
@@ -5,8 +6,6 @@
 #include <env.h>
 
 
-WiFiClientSecure client;
-PubSubClient mqttClient(client);
 /*------------------------------FUNCTION HEADERS------------------------------*/
 
 void connectToWifi();
@@ -15,7 +14,8 @@ void messageReceived(const char* topic, byte* message, unsigned int length);
 
 /*------------------------------DEFINED VARIABLES------------------------------*/
 
-
+WiFiClientSecure client;
+PubSubClient mqttClient(client);
 
 
 
