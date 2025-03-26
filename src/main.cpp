@@ -7,33 +7,21 @@
 
 WiFiClientSecure client;
 PubSubClient mqttClient(client);
+/*------------------------------FUNCTION HEADERS------------------------------*/
 
 void connectToWifi();
 void connectToBroker();
 void messageReceived(const char* topic, byte* message, unsigned int length);
 
-void setup()
-{
-  client.setInsecure();
-
-  Serial.begin(9600);
-
-  connectToWifi();
-  connectToBroker();
-}
-
-void loop()
-{
-  if(WiFi.isConnected() == false){
-    connectToWifi();
-  }
-  if(mqttClient.connected() == false){
-    connectToBroker();
-  }
-  mqttClient.loop();
-}
+/*------------------------------DEFINED VARIABLES------------------------------*/
 
 
+
+
+
+
+
+/*------------------------------FUNCTIONS------------------------------*/
 
 void connectToWifi(){
   WiFi.begin(WIFI_SSID,WIFI_PASS);
@@ -62,4 +50,29 @@ void connectToBroker(){
 
 void messageReceived(const char* topic, byte* message, unsigned int length){
   //Do something if receives any message
+}
+
+
+
+/*---------------------------------MAIN LOOPS--------------------------------------*/
+
+void setup()
+{
+  client.setInsecure();
+
+  Serial.begin(9600);
+
+  connectToWifi();
+  connectToBroker();
+}
+
+void loop()
+{
+  if(WiFi.isConnected() == false){
+    connectToWifi();
+  }
+  if(mqttClient.connected() == false){
+    connectToBroker();
+  }
+  mqttClient.loop();
 }
