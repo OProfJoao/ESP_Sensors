@@ -25,6 +25,7 @@ const char *ledTopic = "ESP32_SENSOR/ledControl";
 
 
 byte lightSensor = 34;
+byte led = 2;
 
 
 
@@ -79,6 +80,7 @@ void setup()
   connectToBroker();
 
   pinMode(lightSensor,INPUT);
+  pinMode(led,OUTPUT);
 }
 
 void loop()
@@ -91,5 +93,11 @@ void loop()
   // }
   // mqttClient.loop();
   Serial.print("Luz: ");
-  Serial.println(map(analogRead(lightSensor),0,4095,0,100));
+  byte lightSensorValue = map(analogRead(lightSensor),0,4095,0,100);
+  Serial.println(lightSensorValue);
+  if(lightSensorValue < 80){
+    digitalWrite(led,HIGH);
+  }else{
+    digitalWrite(led,LOW);
+  }
 }
