@@ -107,11 +107,11 @@ void loop()
   
   if(WiFi.isConnected() && mqttClient.connected()){
     if(lightSensorValue < 80){
-      mqttClient.publish(ledTopic,"Acender");
+      mqttClient.publish(ledTopic,"Acender",true);
       Serial.println("Acender");
     }
     else{
-      mqttClient.publish(ledTopic,"Apagar");
+      mqttClient.publish(ledTopic,"Apagar",true);
       Serial.println("Apagar");
     }
   }
