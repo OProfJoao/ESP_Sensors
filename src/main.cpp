@@ -63,7 +63,7 @@ bool connectToBroker(){
       Serial.println("Connected to broker");
       mqttClient.setCallback(messageReceived);
 
-      mqttClient.subscribe(ledTopic);
+      mqttClient.subscribe(lightTopic);
     }
     delay(1000);
   }
@@ -107,11 +107,11 @@ void loop()
   
   if(WiFi.isConnected() && mqttClient.connected()){
     if(lightSensorValue < 80){
-      mqttClient.publish(lightTopic,"Acender");
+      mqttClient.publish(ledTopic,"Acender");
       Serial.println("Acender");
     }
     else{
-      mqttClient.publish(lightTopic,"Apagar");
+      mqttClient.publish(ledTopic,"Apagar");
       Serial.println("Apagar");
     }
   }
