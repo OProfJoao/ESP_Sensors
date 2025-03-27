@@ -1,17 +1,20 @@
-/*------------------------------IMPORTED LIBRARIES------------------------------*/
+//! ------------------------------IMPORTED LIBRARIES------------------------------
 #include <Arduino.h>
 #include <esp32DHT.h>
 #include <pubSubClient.h>
 #include <WiFiClientSecure.h>
 #include <env.h>
 
-/*------------------------------FUNCTION HEADERS------------------------------*/
+//! ------------------------------FUNCTION HEADERS--------------------------------
+
+
+
 
 bool connectToWifi();
 bool connectToBroker();
 void messageReceived(const char *topic, byte *message, unsigned int length);
 
-/*------------------------------DEFINED VARIABLES------------------------------*/
+//! ------------------------------DEFINED VARIABLES------------------------------
 
 WiFiClientSecure client;
 PubSubClient mqttClient(client);
@@ -28,7 +31,7 @@ unsigned long now = 0;
 byte lightSensor = 34;
 byte led = 2;
 
-/*------------------------------FUNCTIONS------------------------------*/
+//! ------------------------------FUNCTIONS------------------------------
 
 bool connectToWifi()
 {
@@ -83,7 +86,7 @@ void messageReceived(const char *topic, byte *message, unsigned int length)
   // Do something if receives any message
 }
 
-/*---------------------------------MAIN LOOPS--------------------------------------*/
+//! ---------------------------------MAIN LOOPS--------------------------------------
 
 void setup()
 {
