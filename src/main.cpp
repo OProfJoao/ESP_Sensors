@@ -107,8 +107,11 @@ void loop()
   
   if(WiFi.isConnected() && mqttClient.connected()){
     if(lightSensorValue < 80){
-      mqttClient.publish(lightTopic,String(lightSensorValue).c_str());
+      mqttClient.publish(lightTopic,String("Acender").c_str());
+    }
+    else{
+      mqttClient.publish(lightTopic,String("Apagar").c_str());
     }
   }
-  delay(1000);
+  delay(2000);
 }
