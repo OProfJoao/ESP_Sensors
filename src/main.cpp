@@ -8,8 +8,8 @@
 
 /*------------------------------FUNCTION HEADERS------------------------------*/
 
-void connectToWifi();
-void connectToBroker();
+bool connectToWifi();
+bool connectToBroker();
 void messageReceived(const char* topic, byte* message, unsigned int length);
 
 /*------------------------------DEFINED VARIABLES------------------------------*/
@@ -31,7 +31,7 @@ byte led = 2;
 
 /*------------------------------FUNCTIONS------------------------------*/
 
-void connectToWifi(){
+bool connectToWifi(){
   WiFi.begin(WIFI_SSID,WIFI_PASS);
   Serial.println("Connecting to WiFi");
   byte tentativas;
@@ -41,10 +41,13 @@ void connectToWifi(){
     delay(1000);
     tentativas ++;
   }
-  Serial.println("Connected to WiFi");
+  if(WiFi.isConnected()){
+    Serial.println("Connected to WiFi");
+  }
+  return WiFi.isConnected();
 }
 
-void connectToBroker(){
+bool connectToBroker(){
   byte tentativas;
   while(mqttClient.connected() == false && tentativas < 10){
     mqttClient.setServer(BROKER,8883);
@@ -59,7 +62,9 @@ void connectToBroker(){
 
       mqttClient.subscribe(ledTopic);
     }
+    delay(1000);
   }
+  return mqttClient.connected();
 }
 
 void messageReceived(const char* topic, byte* message, unsigned int length){
@@ -85,19 +90,24 @@ void setup()
 
 void loop()
 {
-  // if(WiFi.isConnected() == false){
-  //   connectToWifi();
-  // }
-  // if(mqttClient.connected() == false){
-  //   connectToBroker();
-  // }
-  // mqttClient.loop();
-  Serial.print("Luz: ");
-  byte lightSensorValue = map(analogRead(lightSensor),0,4095,0,100);
-  Serial.println(lightSensorValue);
-  if(lightSensorValue < 80){
-    digitalWrite(led,HIGH);
-  }else{
-    digitalWrite(led,LOW);
+  bool wifiOk = false;
+  bool mqttOk = false;
+
+  if(WiFi.isConnected() == false){
+    wifiOk = connectToWifi();
   }
+  
+  if(mqttClient.connected() == false){
+    mqttOk = connectToBroker();
+  }
+
+  mqttClient.loop();
+  if(wifiOk && mqttOk){
+    byte lightSensorValue = map(analogRead(lightSensor),0,4095,0,100);
+    Serial.println(lightSensorValue);
+    if(lightSensorValue < 80){
+      mqttClient.publish(lightTopic,(char*)lightSensorValue);
+    }
+  }
+  delay(1000);
 }
