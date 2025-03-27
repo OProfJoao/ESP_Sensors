@@ -44,6 +44,9 @@ bool connectToWifi(){
   if(WiFi.isConnected()){
     Serial.println("Connected to WiFi");
   }
+  else{
+    Serial.println("Failed to connect to WiFi");
+  }
   return WiFi.isConnected();
 }
 
@@ -90,23 +93,21 @@ void setup()
 
 void loop()
 {
-  bool wifiOk = false;
-  bool mqttOk = false;
-
   if(WiFi.isConnected() == false){
-    wifiOk = connectToWifi();
+    connectToWifi();
   }
-  
+
   if(mqttClient.connected() == false){
-    mqttOk = connectToBroker();
+    connectToBroker();
   }
 
   mqttClient.loop();
-  if(wifiOk && mqttOk){
-    byte lightSensorValue = map(analogRead(lightSensor),0,4095,0,100);
-    Serial.println(lightSensorValue);
+  byte lightSensorValue = map(analogRead(lightSensor),0,4095,0,100);
+  Serial.println(lightSensorValue);
+  
+  if(WiFi.isConnected() && mqttClient.connected()){
     if(lightSensorValue < 80){
-      mqttClient.publish(lightTopic,(char*)lightSensorValue);
+      mqttClient.publish(lightTopic,String(lightSensorValue).c_str());
     }
   }
   delay(1000);
